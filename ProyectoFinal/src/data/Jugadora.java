@@ -19,14 +19,14 @@ public class Jugadora implements Serializable{
     private String nombre;
     private String posicion;
     private String datos_nacimiento;
-    private int dorsal;
+    private String dorsal;
     private String nacionalidad;
-    private int altura;
+    private String altura;
     private static final long serialVersionUID = 1L;
     //para garantizar que la serialización funciona aunque haya un cambio en el programa
     
     //constructores
-    public Jugadora(String nombre, String posicion, int dorsal, String datos_nacimiento, String nacionalidad, int altura) {
+    public Jugadora(String nombre, String posicion, String dorsal, String datos_nacimiento, String nacionalidad, String altura) {
         
         this.nombre = nombre;
         this.posicion = posicion;
@@ -67,11 +67,11 @@ public class Jugadora implements Serializable{
         this.datos_nacimiento = datos_nacimiento;
     }
 
-    public int getDorsal() {
+    public String getDorsal() {
         return dorsal;
     }
 
-    public void setDorsal(int dorsal) {
+    public void setDorsal(String dorsal) {
         this.dorsal = dorsal;
     }
 
@@ -83,11 +83,11 @@ public class Jugadora implements Serializable{
         this.nacionalidad = nacionalidad;
     }
 
-    public int getAltura() {
+    public String getAltura() {
         return altura;
     }
 
-    public void setAltura(int altura) {
+    public void setAltura(String altura) {
         this.altura = altura;
     }
     
@@ -119,8 +119,8 @@ public class Jugadora implements Serializable{
     
     public String[] getDatosTabulares(){
         
-        String[] datos = {this.getNombre(), this.getPosicion(), Integer.toString(this.getDorsal()), this.getDatos_nacimiento(),
-            Integer.toString(this.getAltura()), this.getNacionalidad()};
+        String[] datos = {this.getNombre(), this.getPosicion(), this.getDorsal(), this.getDatos_nacimiento(),
+            this.getAltura(), this.getNacionalidad()};
         
         return datos;
         //se devuelve un String[] con los datos de la jugadora
@@ -128,8 +128,8 @@ public class Jugadora implements Serializable{
     
     public String getDatosIndividuales(){
         
-        String datos = String.format("Nombre: %s%nPosición: %s%nDorsal: %d%n"
-                + "Nacimiento: %s%nAltura: %d%nNacionalidad: %s",this.getNombre(),
+        String datos = String.format("Nombre: %s%nPosición: %s%nDorsal: %s%n"
+                + "Nacimiento: %s%nAltura: %s%nNacionalidad: %s",this.getNombre(),
                 this.getPosicion(), this.getDorsal(), this.getDatos_nacimiento(), 
                 this.getAltura(), this.getNacionalidad());
         return datos;
@@ -148,10 +148,10 @@ public class Jugadora implements Serializable{
         try{
             jugadora.setNombre(data[0]);
             jugadora.setPosicion(data[1]);
-            jugadora.setDorsal(Integer.parseInt(data[2]));
+            jugadora.setDorsal(data[2]);
             jugadora.setDatos_nacimiento(data[3]);
             jugadora.setNacionalidad(data[4]);
-            jugadora.setAltura(Integer.parseInt(data[5]));
+            jugadora.setAltura(data[5]);
             return jugadora;
         } catch(Exception ex){
             //out.printf("Algo ha fallado, amigo%n");

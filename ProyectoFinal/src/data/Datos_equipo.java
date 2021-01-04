@@ -16,13 +16,13 @@ import static stripAccents.StripAccents.stripAccents;
  */
 public class Datos_equipo implements Serializable, Cloneable{
     
-    String nombre;
-    int partidos_jugados = 0;
-    int partidos_ganados = 0;
-    int partidos_perdidos = 0;
-    int puntos_clasificacion = 0;
-    int puntos_favor = 0;
-    int puntos_contra = 0;
+    private String nombre;
+    private int partidos_jugados = 0;
+    private int partidos_ganados = 0;
+    private int partidos_perdidos = 0;
+    private int puntos_clasificacion = 0;
+    private int puntos_favor = 0;
+    private int puntos_contra = 0;
     private static final long serialVersionUID = 1L;
     //para garantizar que la serialización funciona aunque haya un cambio en el programa
     

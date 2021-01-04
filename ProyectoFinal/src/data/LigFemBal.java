@@ -31,12 +31,12 @@ import static stripAccents.StripAccents.stripAccents;
  */
 public class LigFemBal {
     
-    String temporada = new String();
-    ArrayList<String> nombres_equipos = new ArrayList<>();
-    ArrayList<Equipo> equipos = new ArrayList<>();
-    ArrayList<Jornada> jornadas = new ArrayList<>();
-    Path BINARIOS = Rutas.pathToFolderOnDesktop("LigFemBal\\binarios"); //Se supone constante
-    Path FICH_SALIDA = Rutas.pathToFolderOnDesktop("LigFemBal\\fichsalida"); //Se supone constante
+    private String temporada = new String();
+    private ArrayList<String> nombres_equipos = new ArrayList<>();
+    private ArrayList<Equipo> equipos = new ArrayList<>();
+    private ArrayList<Jornada> jornadas = new ArrayList<>();
+    private Path BINARIOS = Rutas.pathToFolderOnDesktop("LigFemBal\\binarios"); //Se supone constante
+    private Path FICH_SALIDA = Rutas.pathToFolderOnDesktop("LigFemBal\\fichsalida"); //Se supone constante
     
     //MÉTODOS SETTER
     
@@ -195,11 +195,11 @@ public class LigFemBal {
     
     public void cargarJornadas(){
        if(temporada.isEmpty()){
-           System.out.println("Amigo, usted debe antes iniciar la temporada!");
+           System.out.println("Amigo, usted debe antes iniciar la temporada!\n");
            return;
        }
        if(!jornadas.isEmpty()){
-           System.out.println("Oiga usted!!! Qué hace!!! Ya hay jornadas");
+           System.out.println("Estimado usuario, usted ya ha cargado las jornadas\n");
            return;
        }
        //primero se comprueba si hay temporada iniciada y luego si ya hay jornadas
@@ -208,7 +208,7 @@ public class LigFemBal {
        try{
            data = OpMat.importFromDisk(p.toFile(), "\n");
        }catch(Exception ex){
-           err.printf("%nHay problemas para importar los datos, mi pana%n");
+           err.printf("%nHay problemas para importar los datos%n");
            return;
        }
        
@@ -343,10 +343,10 @@ public class LigFemBal {
         //previamente se ha comprobado que el String sea parseable a entero si lo que hay que cambiar es numérico
         switch(eleccion){
             case 1 -> equipos.get(indexEquipo).getJugadoras().get(indexJugadora).setPosicion(atributo);
-            case 2 -> equipos.get(indexEquipo).getJugadoras().get(indexJugadora).setDorsal(Integer.parseInt(atributo));
+            case 2 -> equipos.get(indexEquipo).getJugadoras().get(indexJugadora).setDorsal(atributo);
             case 3 -> equipos.get(indexEquipo).getJugadoras().get(indexJugadora).setDatos_nacimiento(atributo);
             case 4 -> equipos.get(indexEquipo).getJugadoras().get(indexJugadora).setNacionalidad(atributo);
-            case 5 -> equipos.get(indexEquipo).getJugadoras().get(indexJugadora).setAltura(Integer.parseInt(atributo));
+            case 5 -> equipos.get(indexEquipo).getJugadoras().get(indexJugadora).setAltura(atributo);
         }
     } //fin del método modificarJugadora  
     
@@ -439,7 +439,7 @@ public class LigFemBal {
         }
     }//fin del método busquedaJugadora
     
-    //Almacenar resultados
+    //ALMACENAR RESULTADOS
 
     public void guardarJugadoras(String equipo, int indice_equipo) {
         
@@ -486,11 +486,47 @@ public class LigFemBal {
         
     }//fin del método guardarEquipos
     
+    public void guardarClasificacionHTML(int num_jornada) {
+        if(jornadas.get(num_jornada).getClasificacion().isEmpty()){
+            System.out.printf("%nTodavía no se han cargado los datos necesarios"
+                    + "para tener la clasificación de esa jornada%n");
+            return;
+        }else{
+            File f = new File(FICH_SALIDA.toFile(), "Jornada " + (num_jornada+1) + ".html");
+            //se crea el archivo HTML
+            String[][] clasificacion = this.getClasificacion(num_jornada);
+            try{
+                PrintWriter pw = new PrintWriter(f);
+                pw.printf("<!DOCTYPE html>%n"
+                        + "<HTML>%n"
+                        + "<HEAD>%n"
+                        + "<meta charset=\"UTF-8\">%n"
+                        + "<H1>Clasificación de la jornada %d</H1>%n"
+                        + "</HEAD>%n"
+                        + "<BODY>", num_jornada+1);
+                pw.printf("<TABLE BORDER=1>%n");
+
+                for(String[] datos_equipo:clasificacion){
+                    pw.printf("<TR><TD>%s</TD><TD>%s</TD><TD>%s</TD><TD>%s</TD>"
+                            + "<TD>%s</TD><TD>%s</TD><TD>%s</TD><TD>%s</TD><TR>%n", datos_equipo);
+                }
+                pw.printf("</TABLE>%n</BODY>%n</HTML>%n");
+                pw.close(); //DO THIS OR SUFFER
+                
+                //aquí se ha escrito el HTML. He hecho esto basándome en el código del HTML disponible 
+                //en la clasificación de referencia. Sale razonablemente parecido
+            
+                }catch(FileNotFoundException ex){
+                    System.out.printf("ERROR: no se ha creado %s%n%n", f.toString());
+                    return;
+                }
+        }
+    }
     
-    //Gestión de jornada
+    //GESTIÓN DE JORNADA
     
     public void leerResultadosJornada(String jornada, int num_jornada) {
-        if(jornadas.get(num_jornada).clasificacion.isEmpty()){
+        if(jornadas.get(num_jornada).getClasificacion().isEmpty()){
             //primero se comprueba si hay clasificación de la jornada,
             //ya que si existe, la jornada ya ha sido leída
             Path p = Rutas.pathToFileInFolderOnDesktop("LigFemBal\\resul_jornadas", jornada + ".txt");
@@ -598,7 +634,8 @@ public class LigFemBal {
                 }
             }
 
-            Comparator<Datos_equipo> comp = Comparator.comparing(Datos_equipo::getPuntos_clasificacion).reversed();
+            Comparator<Datos_equipo> comp = Comparator.comparing(Datos_equipo::getPuntos_clasificacion).reversed().
+                    thenComparing(Datos_equipo::getPartidos_jugados);
             clasificacion.sort(comp);
             jornadas.get(num_jornada).setClasificacion(clasificacion);
         }

@@ -558,7 +558,16 @@ public class View {
     }
 
     private void guardarClasificacionHTML() {
-        System.out.println("Lo siento profe, no lo hice :(");
+        int num_jornada;
+        do{
+            num_jornada = readInt("Introduzca la jornada cuya clasificación quiere guardar%n"
+                    + "(Pulse 0 para salir): ");
+        }while(!((num_jornada>0 || num_jornada<16) || num_jornada==0));
+        if(num_jornada==0){
+            return;
+        }
+        c.guardarClasificacionHTML(num_jornada-1);
+        System.out.printf("%nProcedimiento realizado con éxito%n");
     }
     
     //MÉTODOS DE GESTIÓN DE JORNADAS
@@ -572,7 +581,7 @@ public class View {
             return;
         }
         //se lee la jornada y se comprueba si el usuario quiere salir del programa
-        c.leerResultadosJornada(num_jornada-1);
+        c.leerResultadosJornada(num_jornada);
         //se llama al índice -1 porque se debe tener en cuenta que la jornada 1 
         //se almacenará en la posición 0
         System.out.println("Resultados leídos");

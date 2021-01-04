@@ -15,10 +15,10 @@ import java.util.ArrayList;
  */
 public class Jornada implements Serializable{
     
-    int numJornada;
-    String fecha;
-    ArrayList<Partido> partidos;
-    ArrayList<Datos_equipo> clasificacion;
+    private int numJornada;
+    private String fecha;
+    private ArrayList<Partido> partidos;
+    private ArrayList<Datos_equipo> clasificacion;
     private static final long serialVersionUID = 1L;
     //para garantizar que la serialización funciona aunque haya un cambio en el programa
     

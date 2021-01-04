@@ -136,7 +136,7 @@ public class Controller {
         } //reconozco que esto es un poco chapuza pero no se me ocurría otra cosa
         
         //al menos el controller hace una operación
-        m.leerResultadosJornada(jornada, num_jornada);
+        m.leerResultadosJornada(jornada, num_jornada-1);
     }
 
     public void modificarFechaJornada(int num_jornada, String nueva_fecha) {
@@ -157,6 +157,10 @@ public class Controller {
     
     public String[][] getClasificacion(int num_jornada){
         return m.getClasificacion(num_jornada);
+    }
+
+    public void guardarClasificacionHTML(int num_jornada) {
+        m.guardarClasificacionHTML(num_jornada);
     }
     
 } //fin de la clase Controller   
